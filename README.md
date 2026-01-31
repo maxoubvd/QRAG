@@ -189,7 +189,7 @@ Tests réalisés sur un corpus de 2136 documents techniques (12 Qubits).
 
 | Métrique | Classique (Baseline) | QRAG (Quantique Simulée) |
 | --- | --- | --- |
-| **Complexité Algo** |  |  (Théorique) |
+| **Complexité Algo** | $O(n)$ | $O(\sqrt{n})$ (Théorique) |
 | **Fidélité (Overlap)** | Référence | **100%** (Validation parfaite) |
 | **Latence (Simulée)** | ~17 ms | ~200 ms (via Lightning) |
 | **Amplification Signal** | N/A | **x256.7** vs Bruit de fond |
