@@ -72,6 +72,8 @@ Pour garantir l'intégrité des benchmarks, les deux branches partagent les mêm
 
 ## Algorithmes Quantiques Implémentés
 
+Des fichiers explicatifs spécifiques pour chaque algorithme ont été ajoutés (dans ``src/quantum_pipeline``)
+
 ### 1. Recherche : Algorithme de Grover
 
 Nous utilisons Grover pour amplifier l'amplitude des documents pertinents (Recherche non structurée).
@@ -246,3 +248,7 @@ Test avec un oridnateur Quantique fonctionnel.
 ### Auteur
 
 Projet réalisé dans le cadre d'une recherche R&D sur l'IA Quantique Hybride.
+
+- Maxime Bendavid
+- Youssef Benaddi
+- Ali Abouhachim-Alami
