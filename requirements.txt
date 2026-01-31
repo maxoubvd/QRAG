@@ -1,0 +1,23 @@
+# --- Orchestration & LLM Framework ---
+langchain==0.2.11
+langchain-community==0.2.10
+langgraph==0.1.15
+langchain-openai==0.1.17  # Optionnel, si tu utilises GPT-4o
+langchain-huggingface==0.0.3
+
+# --- Quantum Computing Stack ---
+pennylane==0.37.0
+pennylane-qiskit==0.37.0
+qiskit==1.1.1
+
+# --- Data Processing & Embeddings ---
+sentence-transformers==3.0.1
+scikit-learn==1.5.1
+numpy==1.26.4
+pandas==2.2.2
+jsonlines==4.0.0
+
+# --- Utilities ---
+tqdm==4.66.4
+python-dotenv==1.0.1
+matplotlib==3.9.1  # Pour visualiser tes benchmarks
