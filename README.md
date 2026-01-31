@@ -231,11 +231,11 @@ Voici les axes d'amélioration identifiés dans le code actuel (voir les tags `#
 ### TODO Quantiques
 * [ ] **Optimisation QAOA (`src/quantum_pipeline/qaoa_ranker.py`)** :
 Actuellement, le circuit QAOA utilise des paramètres `gamma/beta` fixes pour garantir la rapidité de la démo.
-*TODO : Implémenter une boucle d'optimisation classique (ex: COBYLA) pour calibrer dynamiquement les paramètres du circuit.*
+*TODO : Implémenter une boucle d'optimisation classique (ex: SPSA ou COBYLA) pour calibrer dynamiquement les paramètres du circuit.*
 * [ ] **Scalabilité Hardware (Batching)** :
 Adapter le `QuantumGroverRetriever` pour découper le dataset en lots (batches) afin de permettre l'exécution sur des machines IBM Quantum réelles (souvent limitées à 127 qubits bruyants).
 * [ ] **Modèle de Bruit** :
-Ajouter `qml.noise` pour simuler les erreurs de décohérence et tester la robustesse de l'algorithme face à un environnement NISQ réel.
+Ajouter `qml.noise` pour simuler les erreurs de décohérence et tester la robustesse de l'algorithme face à un environnement NISQ réel. (Explorer les méthodes: MEM et ZNE)
   
 *PS: Pour la scalabilité et le bruit à voir si on fait pas une pipeline différente pour pas perdre le bon fonctionnement de la branche actuelle.*
 
@@ -249,6 +249,8 @@ Pour le moment on utilise un algorithme classique de complexité $O(n)$ style *b
 *TODO: En résumé, c'est intéressant de rajouter dans notre implémentation cette 2e approche classique et comparer les trois approches. Ce qui serait le **top du top** ce serait de pouvoir démontrer un exemple parmis les points faibles précédents de supériorité de notre algorithme quantique sur un algorithme **ANN** très répandu.*
 
 ### TODO Globaux
+* [ ] Ajouter des métriques d'évaluation de la qualité du texte généré comme ``BLEU`` ou ``ROUGE``.
+* [ ] Modifier la base de données pour prendre plutôt des standards académiques reconnus pour la comparaison
 * [ ] Développement d'un frontend de démonstration :
   - Frontend en streamlit.
   - Ecran scindé "split-view": réponse classique vs réponse quantique.
