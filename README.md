@@ -227,6 +227,8 @@ qrag/
 
 Voici les axes d'amélioration identifiés dans le code actuel (voir les tags `#[TODO]` dans le code) :
 
+
+### TODO Quantiques
 * [ ] **Optimisation QAOA (`src/quantum_pipeline/qaoa_ranker.py`)** :
 Actuellement, le circuit QAOA utilise des paramètres `gamma/beta` fixes pour garantir la rapidité de la démo.
 *TODO : Implémenter une boucle d'optimisation classique (ex: COBYLA) pour calibrer dynamiquement les paramètres du circuit.*
@@ -234,6 +236,19 @@ Actuellement, le circuit QAOA utilise des paramètres `gamma/beta` fixes pour ga
 Adapter le `QuantumGroverRetriever` pour découper le dataset en lots (batches) afin de permettre l'exécution sur des machines IBM Quantum réelles (souvent limitées à 127 qubits bruyants).
 * [ ] **Modèle de Bruit** :
 Ajouter `qml.noise` pour simuler les erreurs de décohérence et tester la robustesse de l'algorithme face à un environnement NISQ réel.
+  
+*PS: Pour la scalabilité et le bruit à voir si on fait pas une pipeline différente pour pas perdre le bon fonctionnement de la branche actuelle.*
+
+### TODO Classiques
+* [ ] **Ajout d'un nouveau modèle classique** :  
+Pour le moment on utilise un algorithme classique de complexité $O(n)$ style *brute force* (on parcours tous les documents en entiers pour trouver **LA** meilleure réponse possible). Mais en réalité dans l'industrie on utilise plutôt des algorithmes **ANN (Approximate Nearest Neighbors)**, par exemple **HNSW**, **KD-trees** ou encore **FAISS**. Leur complexité est optimisée $(O(\log{n}))$ en précalculant un graphe ou un arbre de navigation. 
+- Néanmoins, ces algorithmes sont, comme leur nom l'indique, **approximatifs** (ignorent 5 à 10% de la base de données). Là ou le QRAG n'ignore **rien**.  
+- Un autre point faible de ces algorithmes deviennent exponentiellement inefficaces quand les vecteurs ont beaucoup de dimensions, lorsque cela arrive ils finissent par redevenir aussi lent que du $O(n)$ classique. Tandis que l'espace d'Hilbert quantique gère naturellement les très grandes dimensions ce qui rends notre approche quantique théoriquement **bien plus robuste aux larges dimensions ($2^n$ états).**
+- Un dernier point faible de ces algorithmes classiques arrive en cas d'un **flux changeant constant de données** (flux d'actualités en temps réel par exemple) puisqu'ils doivent recalculer leurs graphes ou arbres de navigation constamment ce qui coûte très cher en calcul. Notre approche quantique, elle, n'a pas besoin de ça pour fonctionner. On peut chercher directement dans une superposition d'états fraîchements chargés, **l'idéal donc pour des données volatiles.**  
+  
+*TODO: En résumé, c'est intéressant de rajouter dans notre implémentation cette 2e approche classique et comparer les trois approches. Ce qui serait le **top du top** ce serait de pouvoir démontrer un exemple parmis les points faibles précédents de supériorité de notre algorithme quantique sur un algorithme **ANN** très répandu.*
+
+### TODO Globaux
 * [ ] Développement d'un frontend de démonstration :
   - Frontend en streamlit.
   - Ecran scindé "split-view": réponse classique vs réponse quantique.
@@ -245,7 +260,7 @@ Ajouter `qml.noise` pour simuler les erreurs de décohérence et tester la robus
 Test avec un oridnateur Quantique fonctionnel.
 ---
 
-### Auteur
+### Auteurs
 
 Projet réalisé dans le cadre d'une recherche R&D sur l'IA Quantique Hybride.
 
