@@ -10,7 +10,7 @@ os.environ["USE_TF"] = "FALSE"
 
 # Résolution des imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from quantum_pipeline.grover_retriever import QuantumGroverRetriever
+from quantum_pipeline.simulation.grover_retriever import QuantumGroverRetriever
 from sentence_transformers import SentenceTransformer
 
 def run_visualizer(query="Effet tunnel quantique"):

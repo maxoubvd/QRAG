@@ -4,8 +4,8 @@ from langchain_openai import ChatOpenAI
 import numpy as np
 
 # Imports des modules classiques et de la config partagée
-from classic_pipeline.retriever import ClassicalRetriever
-from classic_pipeline.ranker import ClassicalRanker
+from classic_pipeline.bruteforce.retriever_bruteforce import ClassicalRetriever
+from classic_pipeline.bruteforce.ranker_bruteforce import ClassicalRanker
 from config import LLM_MODEL, OPENROUTER_API_KEY, OPENROUTER_URL, LAMBDA_DIVERSITY
 
 # 1. Définition de l'état (Mémoire du pipeline classique)

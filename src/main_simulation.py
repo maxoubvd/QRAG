@@ -9,9 +9,9 @@ from sentence_transformers import SentenceTransformer
 
 # Imports des modules locaux (Config, Pipeline Quantique, Pipeline Classique)
 import config
-from quantum_pipeline.grover_retriever import QuantumGroverRetriever
-from quantum_pipeline.workflow import create_qrag_graph
-from classic_pipeline.workflow import create_classical_graph
+from quantum_pipeline.simulation.grover_retriever import QuantumGroverRetriever
+from quantum_pipeline.simulation.workflow import create_qrag_graph
+from classic_pipeline.bruteforce.workflow_bruteforce import create_classical_graph
 
 
 load_dotenv() # Chargement des variables d'environnement depuis le fichier .env

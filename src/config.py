@@ -20,3 +20,21 @@ LAMBDA_DIVERSITY = 0.8 # Facteur de diversité pour le re-classement (MMR / QAOA
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY") # Clé API pour OpenRouter
 OPENROUTER_URL = "https://openrouter.ai/api/v1" # URL de base pour OpenRouter
 LLM_MODEL = "tngtech/deepseek-r1t2-chimera:free" # Modèle LLM utilisé pour la génération de réponses (gratuit).
+
+# Paramètres de la pipeline quantique simulation
+SIMULATION_DEVICE = "lightning.qubit"
+
+# Paramètres pour l'exécution sur du matériel quantique réel (IBM Quantum)
+IBMQ_API_TOKEN = os.getenv("IBMQ_API_TOKEN") # Clé API IBM Quantum pour l'accès aux ordinateurs quantiques réels
+# 'ibm_brisbane' est un processeur Eagle de 127 qubits souvent disponible.
+# Autres options possibles : 'ibm_kyoto', 'ibm_osaka', 'ibm_sherbrooke'.
+# On peut aussi mettre 'ibmq_qasm_simulator' pour tester la chaîne Qiskit sans attente.
+HARDWARE_BACKEND_NAME = "ibm_brisbane"
+# Nombre de qubits physiques disponibles sur la machine choisie (ex: 127 pour Brisbane)
+# Sert à calibrer le batching (découpage des données).
+HARDWARE_MAX_QUBITS = 127
+# Niveau d'optimisation du transpilateur Qiskit (3 = le plus agressif pour réduire la profondeur)
+TRANSPILATION_LEVEL = 3
+# Nombre de "shots" (tirs) pour l'échantillonnage statistique sur hardware réel
+# Plus ce nombre est élevé, plus la distribution de probabilité est précise (mais c'est plus lent).
+HARDWARE_SHOTS = 4096

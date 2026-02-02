@@ -202,22 +202,39 @@ Tests réalisés sur un corpus de 2136 documents techniques (12 Qubits).
 
 ```
 qrag/
-├── data/                    # Données vectorisées et graphiques
-├── documents/               # Corpus brut (JSONL)
+├── data/                        # Données partagées + Résultats sauvegardés du hardware
+├── documents/                   # Corpus JSONL
 ├── src/
-│   ├── config.py            # Configuration globale (Protection Env)
-│   ├── data_prep.py         # Pipeline d'ingestion (Embed -> PCA)
-│   ├── main.py              # Orchestrateur du Duel
-│   ├── classic_pipeline/    # Implémentation Baseline (Cosine + MMR)
-│   ├── quantum_pipeline/    # Cœur Quantique
-│   │   ├── grover_retriever.py # Moteur Grover (Oracle/Diffuseur)
-│   │   ├── qaoa_ranker.py      # Moteur QAOA (Optimisation)
-│   │   └── workflow.py         # Graphe LangGraph Quantique
+│   ├── config.py                # Config globale (API Keys, Choix Modèles)
+│   ├── data_prep.py             # Pipeline d'ingestion (Inchangé)
+│   │
+│   ├── main_simulation.py       # L'ancien main.py (Démo rapide avec Lightning)
+│   ├── main_hardware.py         # Lance les jobs sur IBM Quantum et sauvegarde les résultats
+│   │
+│   ├── classic_pipeline/        # (Sert de baseline pour les deux)
+│   │   ├── retriever.py
+│   │   ├── ranker.py
+│   │   └── workflow.py
+│   │
+│   ├── quantum_pipeline/
+│   │   ├── __init__.py
+│   │   │
+│   │   ├── simulations/         # Code optimisé pour la démo locale
+│   │   │   ├── grover_sim.py    # Oracle hybride rapide
+│   │   │   ├── qaoa_sim.py      # QAOA
+│   │   │   └── workflow_sim.py  # Graphe LangGraph pour la simulation
+│   │   │
+│   │   └── hardware/            # Code "Ready for Quantum"
+│   │       ├── grover_hw.py     # Avec Batching + Backend IBMQ
+│   │       ├── qaoa_hw.py       # Avec SPSA + Mitigation d'erreur
+│   │       └── workflow_hw.py   # Graphe adapté (Gère l'attente des jobs)
+│   │
 │   └── comparative_analysis/
-│       ├── benchmarker.py   # Tests de performance
-│       ├── visualizer.py    # Preuve graphique
-│       └── comparator.py    # Logique du duel
-└── requirements.txt
+│       ├── benchmarker.py       # Compare Classique vs Simulation
+│       ├── visualizer.py        # Visualise les résultats (Sim ou HW chargé)
+│       └── comparator.py        # Le duel interactif
+│
+└── requirements.txt             # Ajout de qiskit-ibm-runtime
 
 ```
 

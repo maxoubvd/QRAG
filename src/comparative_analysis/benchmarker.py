@@ -5,7 +5,7 @@ import pickle
 import numpy as np
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config import PCA_DIMENSIONS
-from quantum_pipeline.grover_retriever import QuantumGroverRetriever
+from quantum_pipeline.simulation.grover_retriever import QuantumGroverRetriever
 from sentence_transformers import SentenceTransformer
 
 def run_performance_benchmark(n_queries=10):
