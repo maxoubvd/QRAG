@@ -53,6 +53,60 @@ Pour ce prototype, nous avons fait le choix technique de **simuler des qubits pa
 * **Pourquoi ?** L'algorithme de Grover nécessite une grande profondeur de circuit (nombreuses itérations). Les processeurs actuels (NISQ) sont trop bruyants : la décohérence détruit l'information quantique avant la fin du calcul de Grover sur 12 qubits.
 * **L'approche :** Nous utilisons `lightning.qubit` (simulateur C++) pour valider la *logique algorithmique* et la *convergence mathématique* sans le bruit matériel, constituant une "Preuve de Concept" prête pour le futur hardware FTQC (Fault-Tolerant Quantum Computing).
 
+#### 2.a Pipeline Hardware réel
+
+Au final nous avons tout de même implémenté une pipeline utilisant un hardware réel. Mais nous sommes restreint à quelques dizaines de minutes d'utilisation par mois de QPU IBM. Donc nous gardons cette branche principalement pour la démonstration que notre code *peut* fonctionner sur un *vrai* ordinateur quantique.  
+
+Il faut tout de même noter que l'ordinateur d'IBM auquel nousa vons accès gratuitement n'est pas le plus performant:  
+En effet l'ordinateur quantique IBM auquel nous avons accès est celui de Fez au Maroc. Celui-ci est capable de faire tourner **156 Qubits**.   
+Afin de faire fonctionner cette nouvelle pipeline nous avons dû modifier notre code et y faire du *batching*.  
+Le *batching* (traitement par lots) est une technique de découpage qui permet de contourner les limitations physiques des ordinateurs quantiques actuels (NISQ) et de gérer les files d'attente.
+
+Voici concrètement comment ça marche:
+
+Imaginons que nous avions **2136 documents**.
+Pour chercher dedans avec Grover en une seule fois, il te faudrait :
+
+* **12 qubits** ($2^{11} < 2136 < 2^{12}$).
+* Un circuit avec un Oracle gigantesque capable de marquer un état parmi 4096.
+* Ce circuit aurait une **profondeur** (nombre de portes logiques à la suite) de plusieurs milliers d'opérations.
+
+***Pourquoi ça plante sur le hardware réel ?***
+
+* **Décohérence :** Les qubits perdent leur état quantique en quelques microsecondes. Un circuit trop long s'effondre en bruit pur avant la fin du calcul. Le résultat serait du hasard complet. **(C'est dû à la qualité des ordinateurs quantiques actuels)**
+* **Erreur accumulée :** Chaque porte a un petit taux d'erreur ($\approx 1\%$). Après 1000 portes, l'erreur est de 100%.
+
+***La Solution Batching***
+
+Au lieu de faire **1 gros calcul**, ton code découpe le problème en **67 petits calculs** indépendants.
+
+***Concrètement :***
+
+I. **Découpage :** Le code prend les 2136 documents et fait des paquets de 32 documents.
+* Batch 1 : Docs 0 à 31
+* Batch 2 : Docs 32 à 63
+* ...
+* Batch 67 : Docs 2112 à 2136
+
+
+II. **Circuit Simplifié :** Pour chaque batch de 32 docs, il crée un petit circuit Grover sur seulement **5 qubits** ($2^5 = 32$).
+* Ce circuit est très court (peu profond).
+* Il s'exécute vite, **avant** que la décohérence ne détruise l'information.
+
+
+III. **Le worflow:**
+* Le code envoie le Batch 1 à IBM -> IBM renvoie le "gagnant" du batch 1 (ex: Doc 12).
+* Le code envoie le Batch 2 à IBM -> IBM renvoie le "gagnant" du batch 2 (ex: Doc 45).
+* ... et ainsi de suite.
+
+
+IV. **Choix final :** À la fin, le code compare les scores de probabilité de tous les gagnants locaux (Doc 12 vs Doc 45 vs ...) pour trouver les **Top-K** globaux.
+
+Le gros inconvénient de cette méthode c'est qu'elle est très lente, il faut plusieures dizaines de minutes pour exécuter le code entier.  
+Mais le gros point positif est que dans le futur **IBM** et les autres entreprises de Hardware quantique tentent de développer (d'ici 2030 d'après la pluaprt des roadmaps de ces entreprises) des ordinateurs quantique que l'on appellera **FTQC** (Fault-Tolerant Quantum Computing). Ces ordinateurs seront normalement capable de gérer des milliers de Qubits sans aucune erreur de décohérence, on appelle ces Qubits *parfaits*, des **Qubits Logiques**. On pourra donc entièrement se passer de cette méthode de *batching* et exécuter directement notre code comme dans la pipeline de simulation.
+
+---
+
 ### 3. Accélération C++ (`lightning.qubit`)
 
 La simulation de 12+ qubits (pour >2000 documents) implique des calculs matriciels massifs ($2^{12}\ \times 2^{12}$).
