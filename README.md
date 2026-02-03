@@ -249,7 +249,7 @@ Voici les axes d'amélioration identifiés dans le code actuel (voir les tags `#
 * [X] **Optimisation QAOA (`src/quantum_pipeline/qaoa_ranker.py`)** :
 Actuellement, le circuit QAOA utilise des paramètres `gamma/beta` fixes pour garantir la rapidité de la démo.
 *TODO : Implémenter une boucle d'optimisation classique (ex: SPSA ou COBYLA) pour calibrer dynamiquement les paramètres du circuit.*
-* [ ] **Scalabilité Hardware (Batching)** :
+* [X] **Scalabilité Hardware (Batching)** :
 Adapter le `QuantumGroverRetriever` pour découper le dataset en lots (batches) afin de permettre l'exécution sur des machines IBM Quantum réelles (souvent limitées à 127 qubits bruyants).
 * [ ] **Modèle de Bruit** :
 Ajouter `qml.noise` pour simuler les erreurs de décohérence et tester la robustesse de l'algorithme face à un environnement NISQ réel. (Explorer les méthodes: MEM et ZNE)

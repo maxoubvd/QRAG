@@ -81,7 +81,7 @@ print("\n[TEST 3] Simulation de l'Oracle QRAG (Sans Diffuseur)...")
 try:
     # Ajout du chemin src pour importer le module local
     sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-    from quantum_pipeline.simulation.grover_retriever import QuantumGroverRetriever
+    from quantum_pipeline.simulation.grover_retriever_sim import QuantumGroverRetriever
     
     retriever = QuantumGroverRetriever()
     # On force une requête bidon pour voir si l'Oracle réagit

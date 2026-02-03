@@ -1,9 +1,9 @@
 import os
 import pickle
 from config import PCA_DIMENSIONS, LLM_MODEL
-from classic_pipeline.bruteforce.workflow_bruteforce import create_classical_graph
-from quantum_pipeline.simulation.workflow import create_qrag_graph
-from quantum_pipeline.simulation.grover_retriever import QuantumGroverRetriever
+from classic_pipeline.bruteforce.classical_workflow_bruteforce import create_classical_graph
+from quantum_pipeline.simulation.quantum_workflow_sim import create_qrag_graph
+from quantum_pipeline.simulation.grover_retriever_sim import QuantumGroverRetriever
 from sentence_transformers import SentenceTransformer
 
 class QRAGComparator:

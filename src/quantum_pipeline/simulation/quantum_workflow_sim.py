@@ -8,8 +8,8 @@ from langchain_openai import ChatOpenAI
 import numpy as np
 # Importation de la configuration centralisée et des modules quantiques
 from config import LLM_MODEL, OPENROUTER_API_KEY, OPENROUTER_URL, LAMBDA_DIVERSITY
-from quantum_pipeline.simulation.grover_retriever import QuantumGroverRetriever
-from quantum_pipeline.simulation.qaoa_ranker import GroQRanker
+from quantum_pipeline.simulation.grover_retriever_sim import QuantumGroverRetriever
+from quantum_pipeline.simulation.qaoa_ranker_sim import GroQRanker
 
 # 1. Définition de l'état (Mémoire partagée de l'agent)
 class AgentState(TypedDict):
