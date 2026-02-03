@@ -305,8 +305,10 @@ Actuellement, le circuit QAOA utilise des paramètres `gamma/beta` fixes pour ga
 *TODO : Implémenter une boucle d'optimisation classique (ex: SPSA ou COBYLA) pour calibrer dynamiquement les paramètres du circuit.*
 * [X] **Scalabilité Hardware (Batching)** :
 Adapter le `QuantumGroverRetriever` pour découper le dataset en lots (batches) afin de permettre l'exécution sur des machines IBM Quantum réelles (souvent limitées à 127 qubits bruyants).
-* [ ] **Modèle de Bruit** :
-Ajouter `qml.noise` pour simuler les erreurs de décohérence et tester la robustesse de l'algorithme face à un environnement NISQ réel. (Explorer les méthodes: MEM et ZNE)
+* [ ] **Modèle de Bruit (En cours de dev)**:
+Ajouter `qml.noise` pour simuler les erreurs de décohérence et tester la robustesse de l'algorithme face à un environnement NISQ réel. 
+* [ ] **Explorer les méthodes: MEM et ZNE**:
+Ajouter des algorithmes *correcteurs* d'erreurs dans les pipelines bruitées.
   
 *PS: Pour la scalabilité et le bruit à voir si on fait pas une pipeline différente pour pas perdre le bon fonctionnement de la branche actuelle.*
 

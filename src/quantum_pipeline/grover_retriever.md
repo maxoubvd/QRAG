@@ -92,3 +92,9 @@ On peut imaginer une immense table de mixage avec 4096 curseurs (les documents).
 4. **Mesure :** On regarde la table. Les curseurs 496 et 585 crèvent le plafond. On a notre réponse.
 
 C'est exactement ce que le graphique `grover_final_check.png` a montré : le pic bleu (curseur propulsé) au milieu du bruit gris.
+
+---
+
+### 5. Version bruitée
+
+Dans la version bruitée du grover_retriver et du qaoa_ranker nous simulons la décohérence sur les qubits en utilisant `default.mixted`. Puis en appliquant du bruit dans les différentes étapes de l'algorithme.

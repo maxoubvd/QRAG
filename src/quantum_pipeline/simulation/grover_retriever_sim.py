@@ -8,15 +8,6 @@ import numpy as np
 import pickle
 import time
 
-# [TODO] : Adapter cette classe pour découper le dataset en lots (batches) afin de permettre l'exécution 
-# sur des machines IBM Quantum réelles (souvent limitées à 127 qubits bruyants).
-
-# [TODO] : Ajouter `qml.noise` pour simuler les erreurs de décohérence et tester la robustesse 
-# de l'algorithme face à un environnement NISQ réel.
-
-# ! A décier si on créer une nouvelle classe QuantumGroverRetrieverV2 ou si on modifie directement l'actuelle.
-# En créer une nouvelle permet de garder l'ancienne pour être sûr de garder une classe fonctionnelle.
-
 class QuantumGroverRetriever:
     def __init__(self, data_path="data/processed_data.pkl"):
         # Chargement de la base vectorielle pré-calculée

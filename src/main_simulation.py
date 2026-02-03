@@ -10,6 +10,7 @@ from sentence_transformers import SentenceTransformer
 # Imports des modules locaux (Config, Pipeline Quantique, Pipeline Classique)
 import config
 from quantum_pipeline.simulation.grover_retriever_sim import QuantumGroverRetriever
+from quantum_pipeline.simulation.grover_retriever_sim_noise import QuantumGroverRetrieverNoise
 from quantum_pipeline.simulation.quantum_workflow_sim import create_qrag_graph
 from classic_pipeline.bruteforce.classical_workflow_bruteforce import create_classical_graph
 
@@ -17,7 +18,7 @@ from classic_pipeline.bruteforce.classical_workflow_bruteforce import create_cla
 load_dotenv() # Chargement des variables d'environnement depuis le fichier .env
 
 class QRAGDuel:
-    def __init__(self):
+    def __init__(self, use_noise=False, noise_level=0.05):
         print(f"Initialisation du système (Mode {config.PCA_DIMENSIONS}D)...")
         # Chargement du dataset vectorisé et des objets PCA pré-calculés
         with open("data/processed_data.pkl", "rb") as f:
@@ -25,7 +26,10 @@ class QRAGDuel:
         
         self.pca = self.data["pca"]
         self.model = SentenceTransformer(config.EMBED_MODEL_NAME) # Modèle d'embedding partagé
-        self.retriever = QuantumGroverRetriever() # Initialisation du moteur de recherche Grover
+        if use_noise:
+            self.retriever = QuantumGroverRetrieverNoise(noise_level=noise_level)
+        else:
+            self.retriever = QuantumGroverRetriever() # Mode Idéal
         
         # Initialisation des graphes LangGraph
         self.quantum_graph = create_qrag_graph()
@@ -67,6 +71,26 @@ if __name__ == "__main__":
     if not os.path.exists("data/processed_data.pkl"):
         print("Erreur : data/processed_data.pkl introuvable. Lancez 'python src/data_prep.py' d'abord.")
     else:
-        duel = QRAGDuel()
+        print("\n--- CONFIGURATION DE LA SIMULATION ---")
+        print("1. Simulation IDÉALE (Pas de bruit, résultat théorique parfait)")
+        print("2. Simulation BRUITÉE (Simulation NISQ, erreurs de décohérence)")
+        
+        choice = input("Votre choix (1 ou 2) : ").strip()
+        
+        use_noise = False
+        noise_level = 0.0
+        
+        if choice == "2":
+            use_noise = True
+            try:
+                lvl = input("Entrez le niveau de bruit (ex: 0.05 pour 5%) [Défaut: 0.05] : ").strip()
+                noise_level = float(lvl) if lvl else 0.05
+            except ValueError:
+                print("Valeur invalide, utilisation de 0.05 par défaut.")
+                noise_level = 0.05
+        
+        # Lancement avec les paramètres choisis
+        duel = QRAGDuel(use_noise=use_noise, noise_level=noise_level)
+        
         query = "Give me the definition of a quantum computer."
         duel.run(query)
