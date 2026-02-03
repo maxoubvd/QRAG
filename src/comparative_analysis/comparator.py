@@ -65,4 +65,4 @@ class QRAGComparator:
 
 if __name__ == "__main__":
     comparator = QRAGComparator()
-    comparator.run_duel("Donne moi la définition de l\'effet tunnel quantique.")
+    comparator.run_duel("Give me the definition of a quantum computer.")

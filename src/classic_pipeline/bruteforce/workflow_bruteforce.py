@@ -62,15 +62,15 @@ def generate_answer_node(state: ClassicalAgentState):
     # Construction du contexte
     context = "\n\n".join([f"Source {i+1}: {d['text']}" for i, d in enumerate(state["final_docs"])])
     # Prompt strictement identique à celui du pipeline quantique pour isoler l'impact du Retrieval
-    prompt = f"""Tu es un expert en informatique quantique. Réponds à la question suivante en utilisant UNIQUEMENT le contexte fourni. 
-    Si l'information n'est pas dans le contexte, dis que tu ne sais pas.
+    prompt = f"""You are an expert in quantum computing. Answer the following question using ONLY the provided context.
+    If the information is not in the context, say you don't know.
 
     Question: {state['query']}
     
-    Contexte:
+    Context:
     {context}
     
-    Réponse (en français) :"""
+    Answer (in English):"""
     
     return {"answer": llm.invoke(prompt).content}
 

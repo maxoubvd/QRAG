@@ -71,15 +71,15 @@ def generate_answer_node(state: AgentState):
     # Construction du contexte à partir des documents validés par QAOA
     context = "\n\n".join([f"Source {i+1}: {d['text']}" for i, d in enumerate(state["final_docs"])])
     # Prompt restrictif pour forcer l'usage du contexte (Anti-Hallucination)
-    prompt = f"""Tu es un expert en informatique quantique. Réponds à la question suivante en utilisant UNIQUEMENT le contexte fourni. 
-    Si l'information n'est pas dans le contexte, dis que tu ne sais pas.
+    prompt = f"""TYou are an expert in quantum computing. Answer the following question using ONLY the provided context.
+    If the information is not in the context, say you don't know.
 
     Question: {state['query']}
     
-    Contexte:
+    Context:
     {context}
     
-    Réponse (en français) :"""
+    Answer (in English):"""
     
     response = llm.invoke(prompt)
     return {"answer": response.content}

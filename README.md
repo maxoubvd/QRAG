@@ -246,7 +246,7 @@ Voici les axes d'amélioration identifiés dans le code actuel (voir les tags `#
 
 
 ### TODO Quantiques
-* [ ] **Optimisation QAOA (`src/quantum_pipeline/qaoa_ranker.py`)** :
+* [X] **Optimisation QAOA (`src/quantum_pipeline/qaoa_ranker.py`)** :
 Actuellement, le circuit QAOA utilise des paramètres `gamma/beta` fixes pour garantir la rapidité de la démo.
 *TODO : Implémenter une boucle d'optimisation classique (ex: SPSA ou COBYLA) pour calibrer dynamiquement les paramètres du circuit.*
 * [ ] **Scalabilité Hardware (Batching)** :

@@ -68,5 +68,5 @@ if __name__ == "__main__":
         print("Erreur : data/processed_data.pkl introuvable. Lancez 'python src/data_prep.py' d'abord.")
     else:
         duel = QRAGDuel()
-        query = "Donne moi la définition de l\'effet tunnel quantique."
+        query = "Give me the definition of a quantum computer."
         duel.run(query)

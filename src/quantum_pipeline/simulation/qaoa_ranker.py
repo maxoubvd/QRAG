@@ -49,7 +49,10 @@ class GroQRanker:
         Exécute le circuit QAOA pour trouver le meilleur sous-ensemble de documents.
         """
         num_nodes = len(candidates)
-        # Si aucun candidat (cas limite), on retourne une liste vide
+        # Si aucun ou un seul candidat (cas limites), on retourne les retourne directement
+        if num_nodes == 0: return []
+        if num_nodes == 1: return candidates
+        
         candidate_vecs = np.array([c['vector'] for c in candidates])
         
         # --- PRÉPARATION CLASSIQUE ---
@@ -65,34 +68,48 @@ class GroQRanker:
         # Création dynamique du device (le nombre de qubits dépend du nombre de candidats trouvés par Grover)
         dev = qml.device("default.qubit", wires=num_nodes)
 
-        @qml.qnode(dev)
-        def circuit(params):
-            # 1. Initialisation : Superposition uniforme (Hadamard sur tous les qubits)
-            # On commence dans l'état |+> (toutes les combinaisons possibles équiprobables)
+        # Fonction commune pour construire les portes (évite la duplication de code)
+        def qaoa_layer(params):
+            # Initialisation |+>
             for i in range(num_nodes):
                 qml.Hadamard(wires=i)
             
-            # 2. Couches QAOA (Alternance Cost / Mixer)
-            # C'est ici que l'interférence quantique amplifie la solution optimale
+            # Couches QAOA
             gammas = params[:n_layers]
             betas = params[n_layers:]
             for i in range(n_layers):
-                # Evolution selon le coût (Problem unitary)
                 qml.ApproxTimeEvolution(H_cost, gammas[i], 1)
-                # Evolution selon le mélange (Mixer unitary)
                 qml.ApproxTimeEvolution(H_mixer, betas[i], 1)
-            
-            # On mesure la probabilité de chaque chaîne de bits (ex: "101" = doc 1 et 3 choisis)
+
+        # 1. Circuit de Coût (Pour l'optimiseur SPSA)
+        # Retourne l'espérance de l'énergie (Valeur réelle à minimiser)
+        @qml.qnode(dev)
+        def cost_circuit(params):
+            qaoa_layer(params)
+            return qml.expval(H_cost)
+
+        # 2. Circuit de Probabilité (Pour le résultat final)
+        # Retourne la distribution des états
+        @qml.qnode(dev)
+        def prob_circuit(params):
+            qaoa_layer(params)
             return qml.probs(wires=range(num_nodes))
 
         # --- EXÉCUTION QUANTIQUE ---
         
-        # [TODO]
-        # Dans un vrai QAOA, on ferait une boucle d'optimisation classique (ex: COBYLA)
-        # pour trouver les meilleurs paramètres gamma/beta.
-        # Pour ce prototype rapide, on utilise des paramètres heuristiques fixes.
         params = np.array([0.1] * (2 * n_layers), requires_grad=True)
-        probs = circuit(params)
+        
+        # Boucle d'optimisation SPSA (Stochastic Parameter Shift Algorithm)
+        # pour trouver les meilleurs paramètres gamma/beta.
+        # Choix basé sur le papier scientifique.
+        opt = qml.SPSAOptimizer(maxiter=30, c=0.15, a=0.2)
+        for i in range(30):
+            params, cost = opt.step_and_cost(cost_circuit, params)
+            
+        probs = prob_circuit(params)
+       
+        best_bitstring_idx = np.argmax(probs)
+        bitstring = format(best_bitstring_idx, f'0{num_nodes}b')
         
         # --- POST-TRAITEMENT (Interpretation) ---
         
@@ -105,6 +122,9 @@ class GroQRanker:
         selected_indices = [i for i, bit in enumerate(bitstring) if bit == '1']
         
         # Sécurité : Si le QAOA dit "tout jeter" (00...0), on garde au moins le meilleur document classique
-        if not selected_indices: selected_indices = [0]
+        if not selected_indices: 
+            best_indices_classic = np.argsort(relevance)[::-1]
+            k_rescue = min(3, num_nodes)
+            selected_indices = best_indices_classic[:k_rescue].tolist()
             
         return [candidates[i] for i in selected_indices]
